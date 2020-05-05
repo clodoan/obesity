@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Join local JSON data with vector tile geometries</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+<!-- <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+  .scale {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1;
+  }
+
+  .scale img {
+    max-height: 240px;
+    max-width: 240px;
+  }
+</style>
+
+</head>
+
+<body>
+
+<div id="map"></div>
+<div class = "scale">
+   <img src="scale.png" />
+</div>
+<script>
+// var fastfood = "./ff_normalized.geojson";
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpb2EiLCJhIjoiY2s2cXhqZWt2MDA2ODNtcGJjN292NWptYiJ9.7aE7sGFDPHynRMBUXMSgNA';
+// var map = L.map('map').setView([37.8, -96], 4)
+// var statesData = "./statesData.geojson"
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v10',
+  center: [-98, 40],
+  zoom: 4.7
+});
+
+map.on('load', function() {
+
+	// map.addLayer({
+  //   id: "states",
+  //   type: "fill",
+  //   source: {
+  //     type: "vector",
+  //     tiles: [
+	// 			"https://gis-server.data.census.gov/arcgis/rest/services/Hosted/VT_2010_040_00_PY_D1/VectorTileServer/tile/{z}/{y}/{x}.pbf"
+  //     ]
+  //   },
+  //   "source-layer": "State",
+  //   paint: {
+  //     "fill-opacity": 0.6,
+  //     "fill-color": "blue"
+  //   }
+  // });
+
+  map.addSource('obesity', {
+      'type': 'geojson',
+      'url': './obesity.geojson'
+    });
+
+	map.addLayer({
+    'id': 'pattern',
+    'type': 'fill',
+    'source': 'obesity',
+    "source-layer": "original",
+    'paint': {
+          "fill-pattern": ["step",["get","obesity"],
+              "circle-1", 30000,
+              "circle-2", 40000,
+              "circle-3", 50000,
+              "circle-4", 60000,
+              "circle-5", 70000,
+              "circle-6", 85000,
+              "circle-7", 100000,
+              "circle-8"
+          ],
+      "fill-opacity": .8,
+    }
+	})
+  // map.addSource('obesity',{
+  //   type:'geojson',
+  //   data: './obesity.geojson'
+  // 	})
+	//
+  // map.addLayer({
+  //   "id" : "obesity",
+  //   "source" : "obesity",
+  //   "type" : "fill",
+  //   "paint" : {
+  //     "fill-color" :
+  //     [
+  //       "interpolate",
+  //       ["linear"],
+  //       ["get", "Obesity"],
+  //       20.2,
+  //       "hsla(232, 0%, 100%, 0.08)",
+  //       36.2,
+  //       "hsla(112, 85%, 50%, 0.5)"
+  //     ]}
+  //   })
+
+  });
+</script>
