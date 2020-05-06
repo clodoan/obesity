@@ -2,11 +2,12 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Join local JSON data with vector tile geometries</title>
+<title>obesity</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+
 <!-- <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
@@ -32,87 +33,91 @@
 
 <body>
 
-<div id="map"></div>
-<div class = "scale">
-   <img src="scale.png" />
-</div>
-<script>
-// var fastfood = "./ff_normalized.geojson";
 
+
+<div id="map"></div>
+<!-- <div class = "scale">
+   <img src="scale.png" />
+</div> -->
+
+<script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpb2EiLCJhIjoiY2s2cXhqZWt2MDA2ODNtcGJjN292NWptYiJ9.7aE7sGFDPHynRMBUXMSgNA';
-// var map = L.map('map').setView([37.8, -96], 4)
-// var statesData = "./statesData.geojson"
 
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v10',
-  center: [-98, 40],
-  zoom: 4.7
+  center: [-94, 40],
+  zoom: 4,
 });
+
+map.scrollZoom.disable();
 
 map.on('load', function() {
 
-	// map.addLayer({
-  //   id: "states",
-  //   type: "fill",
-  //   source: {
-  //     type: "vector",
-  //     tiles: [
-	// 			"https://gis-server.data.census.gov/arcgis/rest/services/Hosted/VT_2010_040_00_PY_D1/VectorTileServer/tile/{z}/{y}/{x}.pbf"
-  //     ]
-  //   },
-  //   "source-layer": "State",
-  //   paint: {
-  //     "fill-opacity": 0.6,
-  //     "fill-color": "blue"
-  //   }
-  // });
-
   map.addSource('obesity', {
       'type': 'geojson',
-      'url': './obesity.geojson'
+      'data': './obesity.geojson',
     });
 
-	map.addLayer({
-    'id': 'pattern',
-    'type': 'fill',
-    'source': 'obesity',
-    "source-layer": "original",
-    'paint': {
-          "fill-pattern": ["step",["get","obesity"],
-              "circle-1", 30000,
-              "circle-2", 40000,
-              "circle-3", 50000,
-              "circle-4", 60000,
-              "circle-5", 70000,
-              "circle-6", 85000,
-              "circle-7", 100000,
-              "circle-8"
-          ],
-      "fill-opacity": .8,
-    }
-	})
-  // map.addSource('obesity',{
-  //   type:'geojson',
-  //   data: './obesity.geojson'
-  // 	})
-	//
-  // map.addLayer({
-  //   "id" : "obesity",
-  //   "source" : "obesity",
-  //   "type" : "fill",
-  //   "paint" : {
-  //     "fill-color" :
-  //     [
-  //       "interpolate",
-  //       ["linear"],
-  //       ["get", "Obesity"],
-  //       20.2,
-  //       "hsla(232, 0%, 100%, 0.08)",
-  //       36.2,
-  //       "hsla(112, 85%, 50%, 0.5)"
-  //     ]}
-  //   })
+		// Use it
+		map.addLayer({
+			'id': 'obesity(1.77, 25.53)',
+			'type': 'fill',
+			'source': 'obesity',
+			// "source-layer": "original",
+			'paint': {
+						'fill-color':
+						['case', ['<=', ['get', 'fast_food'], 1.77],
+							['case', ['<=', ['get', 'obesity'], 25.53],
+								'#e8e8e8',
+								'#ffffff',
+							],
+							'#ffffff',
+						]
+					},
+		});
 
-  });
+		map.addLayer({
+			'id': 'obesity/fast_food',
+			'type': 'fill',
+			'source': 'obesity',
+			// "source-layer": "original",
+			'paint': {
+						'fill-color':
+						['case',
+							['all', ['<=', ['get', 'fast_food'], 1.77], ['<=', ['get', 'obesity'], 25.53]],
+							'rgba(232, 232, 232, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 1.77], ['<=', ['get', 'obesity'], 30.87]],
+							// '#ace4e4',
+							'rgba(172, 228, 228, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 1.77], ['<=', ['get', 'obesity'], 36.20]],
+							// '#5ac8c8',
+							'rgba(90, 200, 200, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 3.41], ['<=', ['get', 'obesity'], 25.53]],
+							// '#dfb0d6',
+							'rgba(223, 176, 214, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 3.41], ['<=', ['get', 'obesity'], 30.87]],
+							// '#a5add3',
+							'rgba(165, 173, 211, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 3.41], ['<=', ['get', 'obesity'], 36.20]],
+							// '#5698b9',
+							'rgba(86, 152, 185, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 5.05], ['<=', ['get', 'obesity'], 25.53]],
+							// '#be64ac',
+							'rgba(190, 100, 172, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 5.05], ['<=', ['get', 'obesity'], 30.87]],
+							// '#8c62aa',
+							'rgba(140, 98, 170, 0.4)',
+							['all', ['<=', ['get', 'fast_food'], 5.05], ['<=', ['get', 'obesity'], 36.20]],
+							// '#3b4994',
+							'rgba(59, 73, 148, 0.4)',
+							// '#000000',
+							'rgba(255, 255, 255, 0)',
+						],
+					},
+
+
+		});
+
+});
 </script>
