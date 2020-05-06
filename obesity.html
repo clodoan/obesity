@@ -16,16 +16,16 @@
 	body { margin: 0; padding: 0; }
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
 
-  .scale {
+  .legend {
     position: absolute;
-    bottom: 40px;
+    bottom: 20px;
     right: 40px;
     z-index: 1;
   }
 
-  .scale img {
-    max-height: 240px;
-    max-width: 240px;
+  .legend img {
+    max-height: 400px;
+    max-width: 400px;
   }
 </style>
 
@@ -36,9 +36,9 @@
 
 
 <div id="map"></div>
-<!-- <div class = "scale">
-   <img src="scale.png" />
-</div> -->
+<div class = "legend">
+   <img src="./Legend.png" />
+</div>
 
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhdWRpb2EiLCJhIjoiY2s2cXhqZWt2MDA2ODNtcGJjN292NWptYiJ9.7aE7sGFDPHynRMBUXMSgNA';
@@ -81,39 +81,46 @@ map.on('load', function() {
 			'id': 'obesity/fast_food',
 			'type': 'fill',
 			'source': 'obesity',
-			// "source-layer": "original",
+			'layout': {},
 			'paint': {
 						'fill-color':
 						['case',
 							['all', ['<=', ['get', 'fast_food'], 1.77], ['<=', ['get', 'obesity'], 25.53]],
-							'rgba(232, 232, 232, 0.4)',
+							'rgba(232, 232, 232, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 1.77], ['<=', ['get', 'obesity'], 30.87]],
 							// '#ace4e4',
-							'rgba(172, 228, 228, 0.4)',
+							'rgba(172, 228, 228, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 1.77], ['<=', ['get', 'obesity'], 36.20]],
 							// '#5ac8c8',
-							'rgba(90, 200, 200, 0.4)',
+							'rgba(90, 200, 200, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 3.41], ['<=', ['get', 'obesity'], 25.53]],
 							// '#dfb0d6',
-							'rgba(223, 176, 214, 0.4)',
+							'rgba(223, 176, 214, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 3.41], ['<=', ['get', 'obesity'], 30.87]],
 							// '#a5add3',
-							'rgba(165, 173, 211, 0.4)',
+							'rgba(165, 173, 211, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 3.41], ['<=', ['get', 'obesity'], 36.20]],
 							// '#5698b9',
-							'rgba(86, 152, 185, 0.4)',
+							'rgba(86, 152, 185, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 5.05], ['<=', ['get', 'obesity'], 25.53]],
 							// '#be64ac',
-							'rgba(190, 100, 172, 0.4)',
+							'rgba(190, 100, 172, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 5.05], ['<=', ['get', 'obesity'], 30.87]],
 							// '#8c62aa',
-							'rgba(140, 98, 170, 0.4)',
+							'rgba(140, 98, 170, 0.6)',
 							['all', ['<=', ['get', 'fast_food'], 5.05], ['<=', ['get', 'obesity'], 36.20]],
 							// '#3b4994',
-							'rgba(59, 73, 148, 0.4)',
+							'rgba(59, 73, 148, 0.6)',
 							// '#000000',
 							'rgba(255, 255, 255, 0)',
 						],
+
+						// 'fill-opacity': [
+						// 	'case',
+						// 	['boolean', ['feature-state', 'hover'], false],
+						// 		1,
+						// 		0.5
+						// ]
 					},
 
 
